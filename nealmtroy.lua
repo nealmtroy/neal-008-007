@@ -899,13 +899,14 @@ tpGunung.MouseButton1Click:Connect(function()
     end
 end)
 
+-- Auto Muncak
 local isMuncakRunning = false
 local muncakThread = nil
 
 -- Tombol Muncak
-local muncakBtn = createStyledButton(tpTab, "Muncak", UDim2.new(0, 260, 0, 150), UDim2.new(0, 80, 0, 30))
+local muncakBtn = createStyledButton(tpTab, "Muncak", UDim2.new(0, 300, 0, 65), UDim2.new(0, 100, 0, 25))
 -- Tombol Stop
-local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 350, 0, 150), UDim2.new(0, 80, 0, 30))
+local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 405, 0, 65), UDim2.new(0, 100, 0, 25))
 
 muncakBtn.MouseButton1Click:Connect(function()
     if isMuncakRunning then return end
@@ -922,7 +923,6 @@ muncakBtn.MouseButton1Click:Connect(function()
 
                 -- Gerak ke kanan/kiri secara acak
                 local direction = math.random(0, 1) == 1 and Vector3.new(3, 0, 0) or Vector3.new(-3, 0, 0)
-                local originalPos = root.Position
                 for i = 1, math.random(20, 30) do
                     root.Velocity = direction * 5
                     task.wait(0.1)
