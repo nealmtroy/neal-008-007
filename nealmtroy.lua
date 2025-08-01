@@ -927,7 +927,7 @@ muncakBtn.MouseButton1Click:Connect(function()
 				task.wait(0.5)
 
 				-- Jalan ke depan secara manual selama beberapa detik
-                local walkTime = 2 -- detik
+                local walkTime = 1 -- detik
                 local stepTime = 0.1
                 local steps = math.floor(walkTime / stepTime)
                 local moveDistance = 1.5 -- jarak tiap langkah
