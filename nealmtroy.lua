@@ -847,8 +847,8 @@ local mountains = {
     { name = "GUNUNG ARUNIKA",    pos = Vector3.new(288, 318, 689) },
     { name = "GUNUNG BORNEO",     pos = Vector3.new(252, 2369, 6818) },
     { name = "GUNUNG KAHUNG",     pos = Vector3.new(1176, 952, -478) },
-    { name = "GUNUNG EDEN",     pos = Vector3.new(-806, 1937, -939) },
-    { name = "GUNUNG KRAKATAU",     pos = Vector3.new(1276, 844, -140) },
+    { name = "GUNUNG EDEN",       pos = Vector3.new(-806, 1937, -939) },
+    { name = "GUNUNG KRAKATAU",   pos = Vector3.new(1276, 844, -140) },
 }
 
 local currentIndex = 1
@@ -856,7 +856,7 @@ local currentIndex = 1
 -- Label nama gunung
 local gunungLabel = Instance.new("TextLabel", tpTab)
 gunungLabel.Size = UDim2.new(0, 300, 0, 25)
-gunungLabel.Position = UDim2.new(0, 260, 0, 5)
+gunungLabel.Position = UDim2.new(0, 20, 0, 10)
 gunungLabel.TextColor3 = Color3.new(1, 1, 1)
 gunungLabel.BackgroundTransparency = 1
 gunungLabel.Font = Enum.Font.GothamBold
@@ -865,13 +865,13 @@ gunungLabel.TextXAlignment = Enum.TextXAlignment.Left
 gunungLabel.Text = "Gunung: " .. mountains[currentIndex].name
 
 -- Tombol Kiri
-local leftBtn = createStyledButton(tpTab, "←", UDim2.new(0, 260, 0, 35), UDim2.new(0, 35, 0, 25))
+local leftBtn = createStyledButton(tpTab, "←", UDim2.new(0, 20, 0, 40), UDim2.new(0, 35, 0, 25))
 
 -- Tombol Teleport
-local tpGunung = createStyledButton(tpTab, "Teleport", UDim2.new(0, 300, 0, 35), UDim2.new(0, 100, 0, 25))
+local tpGunung = createStyledButton(tpTab, "Teleport", UDim2.new(0, 60, 0, 40), UDim2.new(0, 100, 0, 25))
 
 -- Tombol Kanan
-local rightBtn = createStyledButton(tpTab, "→", UDim2.new(0, 405, 0, 35), UDim2.new(0, 35, 0, 25))
+local rightBtn = createStyledButton(tpTab, "→", UDim2.new(0, 165, 0, 40), UDim2.new(0, 35, 0, 25))
 
 -- Event tombol ←
 leftBtn.MouseButton1Click:Connect(function()
@@ -904,9 +904,9 @@ local isMuncakRunning = false
 local muncakThread = nil
 
 -- Tombol Muncak
-local muncakBtn = createStyledButton(tpTab, "Muncak", UDim2.new(0, 260, 0, 70), UDim2.new(0, 70, 0, 25))
+local muncakBtn = createStyledButton(tpTab, "Auto Muncak", UDim2.new(0, 20, 0, 75), UDim2.new(0, 90, 0, 25))
 -- Tombol Stop
-local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 425, 0, 70), UDim2.new(0, 70, 0, 25))
+local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 115, 0, 75), UDim2.new(0, 70, 0, 25))
 
 muncakBtn.MouseButton1Click:Connect(function()
     if isMuncakRunning then return end
@@ -947,24 +947,25 @@ stopBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- TextBox untuk input nama pemain
+-- TextBox untuk input nama pemain dengan outline
 local tpBox = Instance.new("TextBox", tpTab)
 tpBox.Size = UDim2.new(0, 180, 0, 30)
-tpBox.Position = UDim2.new(0, 320, 0, 70)
+tpBox.Position = UDim2.new(0, 20, 0, 110)
 tpBox.PlaceholderText = "Name to TP"
 tpBox.Text = ""
 tpBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 tpBox.TextColor3 = Color3.new(1, 1, 1)
 tpBox.Font = Enum.Font.Gotham
 tpBox.TextSize = 12
-tpBox.BorderSizePixel = 0
+tpBox.BorderSizePixel = 2
+tpBox.BorderColor3 = Color3.fromRGB(100, 50, 200) -- Outline ungu
 
 local tpBoxCorner = Instance.new("UICorner")
 tpBoxCorner.CornerRadius = UDim.new(0, 6)
 tpBoxCorner.Parent = tpBox
 
 -- Tombol Teleport by Name
-local tpByName = createStyledButton(tpTab, "Teleport by Name", UDim2.new(0, 260, 0, 110), UDim2.new(0, 180, 0, 30))
+local tpByName = createStyledButton(tpTab, "Teleport by Name", UDim2.new(0, 210, 0, 110), UDim2.new(0, 120, 0, 30))
 
 tpByName.MouseButton1Click:Connect(function()
     local target = Players:FindFirstChild(tpBox.Text)
@@ -974,35 +975,68 @@ tpByName.MouseButton1Click:Connect(function()
 end)
 
 -- Tombol Get Koordinat (Clipboard)
-local getCoordBtn = createStyledButton(tpTab, "Get Koordinat", UDim2.new(0, 20, 0, 142))
+local getCoordBtn = createStyledButton(tpTab, "Get Koordinat", UDim2.new(0, 20, 0, 150), UDim2.new(0, 120, 0, 30))
 
--- Fungsi notifikasi 5 detik
+-- Fungsi notifikasi 5 detik dengan posisi yang lebih baik
 local function showNotification(text)
+    local screenGui = player:FindFirstChild("PlayerGui")
+    if not screenGui then return end
+    
     local notif = Instance.new("TextLabel")
-    notif.Size = UDim2.new(0, 300, 0, 30)
-    notif.Position = UDim2.new(0.5, -150, 0, 10)
-    notif.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    notif.BackgroundTransparency = 0.3
-    notif.TextColor3 = Color3.new(1, 1, 1)
-    notif.TextStrokeTransparency = 0.5
+    notif.Size = UDim2.new(0, 350, 0, 40)
+    notif.Position = UDim2.new(0.5, -175, 0, 50) -- Posisi tengah atas layar
+    notif.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    notif.BackgroundTransparency = 0.2
+    notif.TextColor3 = Color3.fromRGB(100, 255, 100) -- Hijau terang
+    notif.TextStrokeTransparency = 0.3
+    notif.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
     notif.Font = Enum.Font.GothamBold
-    notif.TextSize = 14
+    notif.TextSize = 16
     notif.Text = text
     notif.AnchorPoint = Vector2.new(0.5, 0)
-    notif.Parent = tpTab
+    notif.BorderSizePixel = 2
+    notif.BorderColor3 = Color3.fromRGB(100, 255, 100)
+    notif.Parent = screenGui
 
-    task.delay(5, function()
-        if notif then notif:Destroy() end
+    -- Tambahkan corner radius
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = notif
+
+    -- Animasi fade in
+    notif.BackgroundTransparency = 1
+    notif.TextTransparency = 1
+    
+    local tween = game:GetService("TweenService"):Create(
+        notif,
+        TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+        {BackgroundTransparency = 0.2, TextTransparency = 0}
+    )
+    tween:Play()
+
+    -- Hapus setelah 5 detik dengan animasi fade out
+    task.delay(4.7, function()
+        if notif then
+            local fadeOut = game:GetService("TweenService"):Create(
+                notif,
+                TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
+                {BackgroundTransparency = 1, TextTransparency = 1}
+            )
+            fadeOut:Play()
+            fadeOut.Completed:Connect(function()
+                if notif then notif:Destroy() end
+            end)
+        end
     end)
 end
 
--- Event klik
+-- Event klik Get Koordinat
 getCoordBtn.MouseButton1Click:Connect(function()
     local char = player.Character
     local hrp = char and char:FindFirstChild("HumanoidRootPart")
     if hrp then
         local pos = hrp.Position
-        local msg = string.format("X = %d, Y = %d, Z = %d", pos.X, pos.Y, pos.Z)
+        local msg = string.format("X = %d, Y = %d, Z = %d", math.floor(pos.X), math.floor(pos.Y), math.floor(pos.Z))
 
         -- Coba salin ke clipboard
         local success, err = pcall(function()
@@ -1012,10 +1046,10 @@ getCoordBtn.MouseButton1Click:Connect(function()
         if success then
             showNotification("📋 Koordinat tersalin ke clipboard!")
         else
-            showNotification("Gagal salin: "..tostring(err))
+            showNotification("❌ Gagal salin: "..tostring(err))
         end
     else
-        showNotification("HumanoidRootPart tidak ditemukan!")
+        showNotification("❌ HumanoidRootPart tidak ditemukan!")
     end
 end)
 
