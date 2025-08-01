@@ -836,7 +836,7 @@ task.spawn(function()
     end
 end)
 
--- === GUNUNG SECTION ===
+--  GUNUNG SECTION 
 local mountains = {
     { name = "GUNUNG YAMIN",      pos = Vector3.new(-735, 928, -803) },
     { name = "GUNUNG KENCANA",    pos = Vector3.new(5673, 1968, 439) },
@@ -945,7 +945,6 @@ stopBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- === TELEPORT BY NAME SECTION ===
 -- TextBox untuk input nama pemain dengan outline
 local tpBox = Instance.new("TextBox", tpTab)
 tpBox.Size = UDim2.new(0, 180, 0, 30)
@@ -977,7 +976,6 @@ tpByName.MouseButton1Click:Connect(function()
     end
 end)
 
--- === GET KOORDINAT SECTION ===
 -- Tombol Get Koordinat (Clipboard)
 local getCoordBtn = createStyledButton(tpTab, "Get Koordinat", UDim2.new(0, 20, 0, 250), UDim2.new(0, 120, 0, 30))
 
