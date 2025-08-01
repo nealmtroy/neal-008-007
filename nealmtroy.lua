@@ -705,11 +705,6 @@ local function scanCheckpoints()
 	local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
 	if not root then return end
 
-	local function isNPC(part)
-		local model = part:FindFirstAncestorOfClass("Model")
-		return model and model:FindFirstChildOfClass("Humanoid")
-	end
-
 	local function scanFolder(folder)
 		for _, obj in pairs(folder:GetChildren()) do
 			if (obj:IsA("BasePart") or obj:IsA("SpawnLocation")) and not isNPC(obj) then
@@ -822,16 +817,19 @@ end)
 task.spawn(function()
     while true do
         task.wait(2)
-        if autoCheckpointEnabled and #checkpoints > 0 and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            local root = player.Character.HumanoidRootPart
-            local nextIndex = currentCheckpoint + 1
-            if nextIndex <= #checkpoints then
-                local nextCP = checkpoints[nextIndex]
-                local dist = (root.Position - nextCP.part.Position).Magnitude
-                if dist < 10 then
-                    currentCheckpoint = nextIndex
-                    root.CFrame = nextCP.part.CFrame + Vector3.new(0, 5, 0)
-                    checkpointLabel.Text = "Auto TP: " .. nextCP.name
+        if autoCheckpointEnabled and #checkpoints > 0 then
+            local player = game.Players.LocalPlayer
+            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                local root = player.Character.HumanoidRootPart
+                local nextIndex = currentCheckpoint + 1
+                if nextIndex <= #checkpoints then
+                    local nextCP = checkpoints[nextIndex]
+                    local dist = (root.Position - nextCP.Position).Magnitude
+                    if dist < 10 then
+                        currentCheckpoint = nextIndex
+                        root.CFrame = nextCP.CFrame + Vector3.new(0, 5, 0)
+                        checkpointLabel.Text = "Auto TP: " .. nextCP.Name
+                    end
                 end
             end
         end
@@ -847,16 +845,16 @@ local mountains = {
     { name = "GUNUNG ARUNIKA",    pos = Vector3.new(288, 318, 689) },
     { name = "GUNUNG BORNEO",     pos = Vector3.new(252, 2369, 6818) },
     { name = "GUNUNG KAHUNG",     pos = Vector3.new(1176, 952, -478) },
-    { name = "GUNUNG EDEN",     pos = Vector3.new(-806, 1937, -939) },
-    { name = "GUNUNG KRAKATAU",     pos = Vector3.new(1276, 844, -140) },
+    { name = "GUNUNG EDEN",       pos = Vector3.new(-806, 1937, -939) },
+    { name = "GUNUNG KRAKATAU",   pos = Vector3.new(1276, 844, -140) },
 }
 
 local currentIndex = 1
 
--- Label nama gunung
+-- Label nama gunung (DIPINDAH KE KANAN)
 local gunungLabel = Instance.new("TextLabel", tpTab)
 gunungLabel.Size = UDim2.new(0, 300, 0, 25)
-gunungLabel.Position = UDim2.new(0, 260, 0, 5)
+gunungLabel.Position = UDim2.new(0, 350, 0, 5)  -- Kolom kanan
 gunungLabel.TextColor3 = Color3.new(1, 1, 1)
 gunungLabel.BackgroundTransparency = 1
 gunungLabel.Font = Enum.Font.GothamBold
@@ -864,14 +862,14 @@ gunungLabel.TextSize = 14
 gunungLabel.TextXAlignment = Enum.TextXAlignment.Left
 gunungLabel.Text = "Gunung: " .. mountains[currentIndex].name
 
--- Tombol Kiri
-local leftBtn = createStyledButton(tpTab, "←", UDim2.new(0, 260, 0, 35), UDim2.new(0, 35, 0, 25))
+-- Tombol Kiri (KOLOM KANAN)
+local leftBtn = createStyledButton(tpTab, "←", UDim2.new(0, 350, 0, 35), UDim2.new(0, 35, 0, 25))
 
--- Tombol Teleport
-local tpGunung = createStyledButton(tpTab, "Teleport", UDim2.new(0, 300, 0, 35), UDim2.new(0, 100, 0, 25))
+-- Tombol Teleport (KOLOM KANAN)
+local tpGunung = createStyledButton(tpTab, "Teleport", UDim2.new(0, 390, 0, 35), UDim2.new(0, 100, 0, 25))
 
--- Tombol Kanan
-local rightBtn = createStyledButton(tpTab, "→", UDim2.new(0, 405, 0, 35), UDim2.new(0, 35, 0, 25))
+-- Tombol Kanan (KOLOM KANAN)
+local rightBtn = createStyledButton(tpTab, "→", UDim2.new(0, 495, 0, 35), UDim2.new(0, 35, 0, 25))
 
 -- Event tombol ←
 leftBtn.MouseButton1Click:Connect(function()
@@ -893,68 +891,135 @@ end)
 
 -- Event tombol Teleport
 tpGunung.MouseButton1Click:Connect(function()
+    local player = game.Players.LocalPlayer
     local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
     if root then
         root.CFrame = CFrame.new(mountains[currentIndex].pos)
     end
 end)
 
--- TextBox untuk input nama pemain
+-- Auto Muncak
+local isMuncakRunning = false
+local muncakThread = nil
+
+-- Tombol Muncak (KOLOM KANAN)
+local muncakBtn = createStyledButton(tpTab, "Auto Muncak", UDim2.new(0, 350, 0, 70), UDim2.new(0, 90, 0, 25))
+-- Tombol Stop (KOLOM KANAN) - POSISI DIPERBAIKI
+local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 445, 0, 70), UDim2.new(0, 70, 0, 25))
+
+muncakBtn.MouseButton1Click:Connect(function()
+    if isMuncakRunning then return end
+    isMuncakRunning = true
+
+    muncakThread = task.spawn(function()
+        while isMuncakRunning do
+            local player = game.Players.LocalPlayer
+            local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+            local hum = player.Character and player.Character:FindFirstChild("Humanoid")
+            if root and hum then
+                -- Teleport ke gunung
+                root.CFrame = CFrame.new(mountains[currentIndex].pos)
+                task.wait(1)
+
+                -- Gerak ke kanan/kiri secara acak
+                local direction = math.random(0, 1) == 1 and Vector3.new(3, 0, 0) or Vector3.new(-3, 0, 0)
+                for i = 1, math.random(20, 30) do
+                    root.Velocity = direction * 5
+                    task.wait(0.1)
+                end
+                root.Velocity = Vector3.zero
+
+                -- Paksa mati
+                hum.Health = 0
+                task.wait(5)
+            else
+                task.wait(2)
+            end
+        end
+    end)
+end)
+
+stopBtn.MouseButton1Click:Connect(function()
+    isMuncakRunning = false
+    if muncakThread then
+        task.cancel(muncakThread)
+        muncakThread = nil
+    end
+end)
+
+-- TextBox untuk input nama pemain (KOLOM KANAN DENGAN OUTLINE)
 local tpBox = Instance.new("TextBox", tpTab)
 tpBox.Size = UDim2.new(0, 180, 0, 30)
-tpBox.Position = UDim2.new(0, 260, 0, 70)
+tpBox.Position = UDim2.new(0, 350, 0, 105)  -- Kolom kanan
 tpBox.PlaceholderText = "Name to TP"
 tpBox.Text = ""
 tpBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 tpBox.TextColor3 = Color3.new(1, 1, 1)
 tpBox.Font = Enum.Font.Gotham
 tpBox.TextSize = 12
-tpBox.BorderSizePixel = 0
+tpBox.BorderSizePixel = 2
+tpBox.BorderColor3 = Color3.fromRGB(100, 50, 200)  -- Outline ungu
 
 local tpBoxCorner = Instance.new("UICorner")
 tpBoxCorner.CornerRadius = UDim.new(0, 6)
 tpBoxCorner.Parent = tpBox
 
--- Tombol Teleport by Name
-local tpByName = createStyledButton(tpTab, "Teleport by Name", UDim2.new(0, 260, 0, 110), UDim2.new(0, 180, 0, 30))
+-- Tombol Teleport by Name (KOLOM KANAN)
+local tpByName = createStyledButton(tpTab, "Teleport by Name", UDim2.new(0, 350, 0, 140), UDim2.new(0, 180, 0, 30))
 
 tpByName.MouseButton1Click:Connect(function()
+    local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
     local target = Players:FindFirstChild(tpBox.Text)
     if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
-        player.Character:FindFirstChild("HumanoidRootPart").CFrame = target.Character.HumanoidRootPart.CFrame
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            player.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame
+        end
     end
 end)
 
--- Tombol Get Koordinat (Clipboard)
-local getCoordBtn = createStyledButton(tpTab, "Get Koordinat", UDim2.new(0, 20, 0, 142))
+-- Tombol Get Koordinat (Clipboard) - POSISI BAWAH TENGAH
+local getCoordBtn = createStyledButton(tpTab, "Get Koordinat", UDim2.new(0, 200, 0, 180))
 
--- Fungsi notifikasi 5 detik
+-- Fungsi notifikasi 5 detik (DIPERBAIKI)
 local function showNotification(text)
+    local player = game.Players.LocalPlayer
+    local screenGui = player:FindFirstChild("PlayerGui")
+    if not screenGui then return end
+    
     local notif = Instance.new("TextLabel")
-    notif.Size = UDim2.new(0, 300, 0, 30)
-    notif.Position = UDim2.new(0.5, -150, 0, 10)
-    notif.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    notif.BackgroundTransparency = 0.3
-    notif.TextColor3 = Color3.new(1, 1, 1)
-    notif.TextStrokeTransparency = 0.5
+    notif.Size = UDim2.new(0, 350, 0, 40)
+    notif.Position = UDim2.new(0.5, -175, 0, 50)
+    notif.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    notif.BackgroundTransparency = 0.2
+    notif.TextColor3 = Color3.fromRGB(100, 255, 100)
+    notif.TextStrokeTransparency = 0.3
+    notif.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
     notif.Font = Enum.Font.GothamBold
-    notif.TextSize = 14
+    notif.TextSize = 16
     notif.Text = text
     notif.AnchorPoint = Vector2.new(0.5, 0)
-    notif.Parent = tpTab
+    notif.BorderSizePixel = 2
+    notif.BorderColor3 = Color3.fromRGB(100, 255, 100)
+    notif.Parent = screenGui
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = notif
 
     task.delay(5, function()
         if notif then notif:Destroy() end
     end)
 end
 
--- Event klik
+-- Event klik Get Koordinat
 getCoordBtn.MouseButton1Click:Connect(function()
+    local player = game.Players.LocalPlayer
     local char = player.Character
     local hrp = char and char:FindFirstChild("HumanoidRootPart")
     if hrp then
         local pos = hrp.Position
-        local msg = string.format("X = %d, Y = %d, Z = %d", pos.X, pos.Y, pos.Z)
+        local msg = string.format("X = %d, Y = %d, Z = %d", math.floor(pos.X), math.floor(pos.Y), math.floor(pos.Z))
 
         -- Coba salin ke clipboard
         local success, err = pcall(function()
@@ -964,10 +1029,10 @@ getCoordBtn.MouseButton1Click:Connect(function()
         if success then
             showNotification("📋 Koordinat tersalin ke clipboard!")
         else
-            showNotification("Gagal salin: "..tostring(err))
+            showNotification("❌ Gagal salin: "..tostring(err))
         end
     else
-        showNotification("HumanoidRootPart tidak ditemukan!")
+        showNotification("❌ HumanoidRootPart tidak ditemukan!")
     end
 end)
 
