@@ -221,8 +221,8 @@ local function createStyledButton(parent, text, position, size)
 end
 
 -- PLAYER Tab
-local playerBtn = createMenuButton("PLAYER", 0)
-local playerTab = createTabContent("PLAYER")
+local playerBtn = createMenuButton("Player", 0)
+local playerTab = createTabContent("Player")
 
 -- Speed
 local speedLevel = 1
