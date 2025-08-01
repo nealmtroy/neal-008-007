@@ -813,6 +813,9 @@ autoCheckpointBtn.MouseButton1Click:Connect(function()
     autoCheckpointBtn.BackgroundColor3 = autoCheckpointEnabled and Color3.fromRGB(0, 150, 0) or Color3.fromRGB(100, 0, 150)
 end)
 
+-- Tombol Get Koordinat (dibawah Auto Mode) - POSISI DIPERBAIKI
+local getCoordBtn = createStyledButton(tpTab, "Get Koordinat", UDim2.new(0, 20, 0, 142))
+
 -- Auto Mode Logic
 task.spawn(function()
     while true do
@@ -851,10 +854,10 @@ local mountains = {
 
 local currentIndex = 1
 
--- Label nama gunung (DIPINDAH KE KANAN)
+-- Label nama gunung (DIPINDAH KE KIRI LAGI)
 local gunungLabel = Instance.new("TextLabel", tpTab)
 gunungLabel.Size = UDim2.new(0, 300, 0, 25)
-gunungLabel.Position = UDim2.new(0, 350, 0, 5)  -- Kolom kanan
+gunungLabel.Position = UDim2.new(0, 280, 0, 5)  -- Lebih ke kiri dari 350
 gunungLabel.TextColor3 = Color3.new(1, 1, 1)
 gunungLabel.BackgroundTransparency = 1
 gunungLabel.Font = Enum.Font.GothamBold
@@ -862,14 +865,14 @@ gunungLabel.TextSize = 14
 gunungLabel.TextXAlignment = Enum.TextXAlignment.Left
 gunungLabel.Text = "Gunung: " .. mountains[currentIndex].name
 
--- Tombol Kiri (KOLOM KANAN)
-local leftBtn = createStyledButton(tpTab, "←", UDim2.new(0, 350, 0, 35), UDim2.new(0, 35, 0, 25))
+-- Tombol Kiri (LEBIH KE KIRI)
+local leftBtn = createStyledButton(tpTab, "←", UDim2.new(0, 280, 0, 35), UDim2.new(0, 35, 0, 25))
 
--- Tombol Teleport (KOLOM KANAN)
-local tpGunung = createStyledButton(tpTab, "Teleport", UDim2.new(0, 390, 0, 35), UDim2.new(0, 100, 0, 25))
+-- Tombol Teleport (LEBIH KE KIRI)
+local tpGunung = createStyledButton(tpTab, "Teleport", UDim2.new(0, 320, 0, 35), UDim2.new(0, 100, 0, 25))
 
--- Tombol Kanan (KOLOM KANAN)
-local rightBtn = createStyledButton(tpTab, "→", UDim2.new(0, 495, 0, 35), UDim2.new(0, 35, 0, 25))
+-- Tombol Kanan (LEBIH KE KIRI)
+local rightBtn = createStyledButton(tpTab, "→", UDim2.new(0, 425, 0, 35), UDim2.new(0, 35, 0, 25))
 
 -- Event tombol ←
 leftBtn.MouseButton1Click:Connect(function()
@@ -902,10 +905,10 @@ end)
 local isMuncakRunning = false
 local muncakThread = nil
 
--- Tombol Muncak (KOLOM KANAN)
-local muncakBtn = createStyledButton(tpTab, "Auto Muncak", UDim2.new(0, 350, 0, 70), UDim2.new(0, 90, 0, 25))
--- Tombol Stop (KOLOM KANAN) - POSISI DIPERBAIKI
-local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 445, 0, 70), UDim2.new(0, 70, 0, 25))
+-- Tombol Muncak (LEBIH KE KIRI)
+local muncakBtn = createStyledButton(tpTab, "Auto Muncak", UDim2.new(0, 280, 0, 70), UDim2.new(0, 90, 0, 25))
+-- Tombol Stop (LEBIH KE KIRI)
+local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 375, 0, 70), UDim2.new(0, 70, 0, 25))
 
 muncakBtn.MouseButton1Click:Connect(function()
     if isMuncakRunning then return end
@@ -947,10 +950,10 @@ stopBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- TextBox untuk input nama pemain (KOLOM KANAN DENGAN OUTLINE)
+-- TextBox untuk input nama pemain (LEBIH KE KIRI)
 local tpBox = Instance.new("TextBox", tpTab)
 tpBox.Size = UDim2.new(0, 180, 0, 30)
-tpBox.Position = UDim2.new(0, 350, 0, 105)  -- Kolom kanan
+tpBox.Position = UDim2.new(0, 280, 0, 105)  -- Lebih ke kiri dari 350
 tpBox.PlaceholderText = "Name to TP"
 tpBox.Text = ""
 tpBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -964,8 +967,8 @@ local tpBoxCorner = Instance.new("UICorner")
 tpBoxCorner.CornerRadius = UDim.new(0, 6)
 tpBoxCorner.Parent = tpBox
 
--- Tombol Teleport by Name (KOLOM KANAN)
-local tpByName = createStyledButton(tpTab, "Teleport by Name", UDim2.new(0, 350, 0, 140), UDim2.new(0, 180, 0, 30))
+-- Tombol Teleport by Name (LEBIH KE KIRI)
+local tpByName = createStyledButton(tpTab, "Teleport by Name", UDim2.new(0, 280, 0, 140), UDim2.new(0, 180, 0, 30))
 
 tpByName.MouseButton1Click:Connect(function()
     local Players = game:GetService("Players")
@@ -977,9 +980,6 @@ tpByName.MouseButton1Click:Connect(function()
         end
     end
 end)
-
--- Tombol Get Koordinat (Clipboard) - POSISI BAWAH TENGAH
-local getCoordBtn = createStyledButton(tpTab, "Get Koordinat", UDim2.new(0, 200, 0, 180))
 
 -- Fungsi notifikasi 5 detik (DIPERBAIKI)
 local function showNotification(text)
