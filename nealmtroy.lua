@@ -904,9 +904,9 @@ local isMuncakRunning = false
 local muncakThread = nil
 
 -- Tombol Muncak
-local muncakBtn = createStyledButton(tpTab, "Muncak", UDim2.new(0, 200, 0, 65), UDim2.new(0, 70, 0, 25))
+local muncakBtn = createStyledButton(tpTab, "Muncak", UDim2.new(0, 260, 0, 70), UDim2.new(0, 70, 0, 25))
 -- Tombol Stop
-local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 280, 0, 65), UDim2.new(0, 70, 0, 25))
+local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 425, 0, 70), UDim2.new(0, 70, 0, 25))
 
 muncakBtn.MouseButton1Click:Connect(function()
     if isMuncakRunning then return end
@@ -950,7 +950,7 @@ end)
 -- TextBox untuk input nama pemain
 local tpBox = Instance.new("TextBox", tpTab)
 tpBox.Size = UDim2.new(0, 180, 0, 30)
-tpBox.Position = UDim2.new(0, 260, 0, 70)
+tpBox.Position = UDim2.new(0, 320, 0, 70)
 tpBox.PlaceholderText = "Name to TP"
 tpBox.Text = ""
 tpBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
