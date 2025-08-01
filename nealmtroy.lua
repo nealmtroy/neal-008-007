@@ -899,6 +899,54 @@ tpGunung.MouseButton1Click:Connect(function()
     end
 end)
 
+local isMuncakRunning = false
+local muncakThread = nil
+
+-- Tombol Muncak
+local muncakBtn = createStyledButton(tpTab, "Muncak", UDim2.new(0, 260, 0, 150), UDim2.new(0, 80, 0, 30))
+-- Tombol Stop
+local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 350, 0, 150), UDim2.new(0, 80, 0, 30))
+
+muncakBtn.MouseButton1Click:Connect(function()
+    if isMuncakRunning then return end
+    isMuncakRunning = true
+
+    muncakThread = task.spawn(function()
+        while isMuncakRunning do
+            local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+            local hum = player.Character and player.Character:FindFirstChild("Humanoid")
+            if root and hum then
+                -- Teleport ke gunung
+                root.CFrame = CFrame.new(mountains[currentIndex].pos)
+                task.wait(1)
+
+                -- Gerak ke kanan/kiri secara acak
+                local direction = math.random(0, 1) == 1 and Vector3.new(3, 0, 0) or Vector3.new(-3, 0, 0)
+                local originalPos = root.Position
+                for i = 1, math.random(20, 30) do
+                    root.Velocity = direction * 5
+                    task.wait(0.1)
+                end
+                root.Velocity = Vector3.zero
+
+                -- Paksa mati
+                hum.Health = 0
+                task.wait(5)
+            else
+                task.wait(2)
+            end
+        end
+    end)
+end)
+
+stopBtn.MouseButton1Click:Connect(function()
+    isMuncakRunning = false
+    if muncakThread then
+        task.cancel(muncakThread)
+        muncakThread = nil
+    end
+end)
+
 -- TextBox untuk input nama pemain
 local tpBox = Instance.new("TextBox", tpTab)
 tpBox.Size = UDim2.new(0, 180, 0, 30)
