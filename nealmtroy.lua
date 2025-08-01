@@ -904,9 +904,9 @@ local isMuncakRunning = false
 local muncakThread = nil
 
 -- Tombol Muncak
-local muncakBtn = createStyledButton(tpTab, "Muncak", UDim2.new(0, 220, 0, 65), UDim2.new(0, 70, 0, 25))
+local muncakBtn = createStyledButton(tpTab, "Muncak", UDim2.new(0, 180, 0, 65), UDim2.new(0, 70, 0, 25))
 -- Tombol Stop
-local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 280, 0, 65), UDim2.new(0, 70, 0, 25))
+local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 250, 0, 65), UDim2.new(0, 70, 0, 25))
 
 muncakBtn.MouseButton1Click:Connect(function()
     if isMuncakRunning then return end
