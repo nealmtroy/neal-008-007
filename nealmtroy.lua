@@ -926,17 +926,20 @@ muncakBtn.MouseButton1Click:Connect(function()
 				root.CFrame = CFrame.new(targetPos)
 				task.wait(0.5)
 
-				-- Jalan ke depan selama beberapa detik
-				local walkTime = 3 -- detik
-				local startTime = tick()
+				-- Jalan ke depan secara manual selama beberapa detik
+                local walkTime = 3 -- detik
+                local stepTime = 0.1
+                local steps = math.floor(walkTime / stepTime)
+                local moveDistance = 1.5 -- jarak tiap langkah
 
-				while tick() - startTime < walkTime and hum and root do
-					hum:Move(Vector3.new(0, 0, -1), false) -- ke depan relatif ke CFrame
-					task.wait()
-				end
-
-				hum:Move(Vector3.zero, false) -- berhenti jalan
-
+                for i = 1, steps do
+                    if root then
+                        local forward = root.CFrame.LookVector
+                        root.CFrame = root.CFrame + forward * moveDistance
+                    end
+                    task.wait(stepTime)
+                end
+                
 				-- Bunuh karakter
 				hum.Health = 0
 				task.wait(5)
