@@ -902,53 +902,55 @@ tpGunung.MouseButton1Click:Connect(function()
     end
 end)
 
--- Auto Muncak
 local isMuncakRunning = false
 local muncakThread = nil
 
--- Tombol Muncak (LEBIH KE KIRI)
+-- Tombol GUI
 local muncakBtn = createStyledButton(tpTab, "Auto Muncak", UDim2.new(0, 280, 0, 70), UDim2.new(0, 90, 0, 25))
--- Tombol Stop (LEBIH KE KIRI)
 local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 375, 0, 70), UDim2.new(0, 70, 0, 25))
 
 muncakBtn.MouseButton1Click:Connect(function()
-    if isMuncakRunning then return end
-    isMuncakRunning = true
+	if isMuncakRunning then return end
+	isMuncakRunning = true
 
-    muncakThread = task.spawn(function()
-        while isMuncakRunning do
-            local player = game.Players.LocalPlayer
-            local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-            local hum = player.Character and player.Character:FindFirstChild("Humanoid")
-            if root and hum then
-                -- Teleport ke gunung
-                root.CFrame = CFrame.new(mountains[currentIndex].pos)
-                task.wait(1)
+	muncakThread = task.spawn(function()
+		while isMuncakRunning do
+			local player = game.Players.LocalPlayer
+			local character = player.Character or player.CharacterAdded:Wait()
+			local root = character:WaitForChild("HumanoidRootPart", 5)
+			local hum = character:WaitForChild("Humanoid", 5)
 
-                -- Gerak ke kanan/kiri secara acak
-                local direction = math.random(0, 1) == 1 and Vector3.new(3, 0, 0) or Vector3.new(-3, 0, 0)
-                for i = 1, math.random(20, 30) do
-                    root.Velocity = direction * 5
-                    task.wait(0.1)
-                end
-                root.Velocity = Vector3.zero
+			if root and hum then
+				-- Teleport ke spot gunung
+				local targetPos = mountains[currentIndex].pos
+				root.CFrame = CFrame.new(targetPos)
+				task.wait(0.5)
 
-                -- Paksa mati
-                hum.Health = 0
-                task.wait(5)
-            else
-                task.wait(2)
-            end
-        end
-    end)
+				-- Jalan ke depan selama beberapa detik
+				local walkTime = 3 -- detik
+				local startTime = tick()
+
+				while tick() - startTime < walkTime and hum and root do
+					hum:Move(Vector3.new(0, 0, -1), false) -- ke depan relatif ke CFrame
+					task.wait()
+				end
+
+				hum:Move(Vector3.zero, false) -- berhenti jalan
+
+				-- Bunuh karakter
+				hum.Health = 0
+				task.wait(5)
+			end
+		end
+	end)
 end)
 
 stopBtn.MouseButton1Click:Connect(function()
-    isMuncakRunning = false
-    if muncakThread then
-        task.cancel(muncakThread)
-        muncakThread = nil
-    end
+	isMuncakRunning = false
+	if muncakThread then
+		task.cancel(muncakThread)
+		muncakThread = nil
+	end
 end)
 
 -- TextBox untuk input nama pemain (LEBIH KE KIRI)
