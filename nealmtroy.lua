@@ -741,11 +741,10 @@ local function scanCheckpoints()
 	return #checkpoints
 end
 
--- === CHECKPOINT SECTION ===
 -- Label nama Checkpoint
 local checkpointLabel = Instance.new("TextLabel", tpTab)
 checkpointLabel.Size = UDim2.new(0, 300, 0, 25)
-checkpointLabel.Position = UDim2.new(0, 20, 0, 10)
+checkpointLabel.Position = UDim2.new(0, 20, 0, 7)
 checkpointLabel.TextColor3 = Color3.new(1, 1, 1)
 checkpointLabel.BackgroundTransparency = 1
 checkpointLabel.Font = Enum.Font.GothamBold
@@ -754,21 +753,17 @@ checkpointLabel.TextXAlignment = Enum.TextXAlignment.Left
 checkpointLabel.Text = "Checkpoint: -"
 
 -- Tombol ← Checkpoint
-local leftCheckpointBtn = createStyledButton(tpTab, "←", UDim2.new(0, 20, 0, 40), UDim2.new(0, 35, 0, 25))
+local leftCheckpointBtn = createStyledButton(tpTab, "←", UDim2.new(0, 20, 0, 37), UDim2.new(0, 35, 0, 25))
 
 -- Tombol Teleport Checkpoint
-local tpCheckpointBtn = createStyledButton(tpTab, "Teleport", UDim2.new(0, 60, 0, 40), UDim2.new(0, 100, 0, 25))
+local tpCheckpointBtn = createStyledButton(tpTab, "Teleport", UDim2.new(0, 60, 0, 37), UDim2.new(0, 100, 0, 25))
 
 -- Tombol → Checkpoint
-local rightCheckpointBtn = createStyledButton(tpTab, "→", UDim2.new(0, 165, 0, 40), UDim2.new(0, 35, 0, 25))
+local rightCheckpointBtn = createStyledButton(tpTab, "→", UDim2.new(0, 170, 0, 37), UDim2.new(0, 35, 0, 25))
 
 -- Tombol Scan Checkpoints
-local scanCheckpointBtn = createStyledButton(tpTab, "Scan Checkpoints", UDim2.new(0, 210, 0, 40), UDim2.new(0, 120, 0, 25))
+local scanCheckpointBtn = createStyledButton(tpTab, "Scan Checkpoints", UDim2.new(0, 20, 0, 72))
 
--- Auto Checkpoint Toggle
-local autoCheckpointBtn = createStyledButton(tpTab, "Auto Mode: OFF", UDim2.new(0, 20, 0, 75), UDim2.new(0, 120, 0, 25))
-
--- === CHECKPOINT EVENTS ===
 scanCheckpointBtn.MouseButton1Click:Connect(function()
 	local count = scanCheckpoints()
 	if count > 0 then
@@ -779,6 +774,7 @@ scanCheckpointBtn.MouseButton1Click:Connect(function()
 	end
 end)
 
+-- Tombol ← event
 leftCheckpointBtn.MouseButton1Click:Connect(function()
 	if #checkpoints == 0 then return end
 	currentCheckpoint = currentCheckpoint - 1
@@ -788,6 +784,7 @@ leftCheckpointBtn.MouseButton1Click:Connect(function()
 	checkpointLabel.Text = "Checkpoint: " .. checkpoints[currentCheckpoint].Name
 end)
 
+-- Tombol → event
 rightCheckpointBtn.MouseButton1Click:Connect(function()
 	if #checkpoints == 0 then return end
 	currentCheckpoint = currentCheckpoint + 1
@@ -797,6 +794,7 @@ rightCheckpointBtn.MouseButton1Click:Connect(function()
 	checkpointLabel.Text = "Checkpoint: " .. checkpoints[currentCheckpoint].Name
 end)
 
+-- Tombol Teleport event
 tpCheckpointBtn.MouseButton1Click:Connect(function()
 	if #checkpoints == 0 then return end
 	local checkpoint = checkpoints[currentCheckpoint]
@@ -807,6 +805,8 @@ tpCheckpointBtn.MouseButton1Click:Connect(function()
 	end
 end)
 
+-- Auto Checkpoint Toggle
+local autoCheckpointBtn = createStyledButton(tpTab, "Auto Mode: OFF", UDim2.new(0, 20, 0, 107))
 autoCheckpointBtn.MouseButton1Click:Connect(function()
     autoCheckpointEnabled = not autoCheckpointEnabled
     autoCheckpointBtn.Text = autoCheckpointEnabled and "Auto Mode: ON" or "Auto Mode: OFF"
@@ -836,7 +836,7 @@ task.spawn(function()
     end
 end)
 
--- === GUNUNG SECTION ===
+-- Daftar gunung dan koordinatnya
 local mountains = {
     { name = "GUNUNG YAMIN",      pos = Vector3.new(-735, 928, -803) },
     { name = "GUNUNG KENCANA",    pos = Vector3.new(5673, 1968, 439) },
@@ -851,10 +851,10 @@ local mountains = {
 
 local currentIndex = 1
 
--- Label nama gunung
+-- Label nama gunung (DIPINDAH KE KANAN)
 local gunungLabel = Instance.new("TextLabel", tpTab)
 gunungLabel.Size = UDim2.new(0, 300, 0, 25)
-gunungLabel.Position = UDim2.new(0, 20, 0, 110)
+gunungLabel.Position = UDim2.new(0, 350, 0, 5)  -- Kolom kanan
 gunungLabel.TextColor3 = Color3.new(1, 1, 1)
 gunungLabel.BackgroundTransparency = 1
 gunungLabel.Font = Enum.Font.GothamBold
@@ -862,16 +862,16 @@ gunungLabel.TextSize = 14
 gunungLabel.TextXAlignment = Enum.TextXAlignment.Left
 gunungLabel.Text = "Gunung: " .. mountains[currentIndex].name
 
--- Tombol Kiri Gunung
-local leftBtn = createStyledButton(tpTab, "←", UDim2.new(0, 20, 0, 140), UDim2.new(0, 35, 0, 25))
+-- Tombol Kiri (KOLOM KANAN)
+local leftBtn = createStyledButton(tpTab, "←", UDim2.new(0, 350, 0, 35), UDim2.new(0, 35, 0, 25))
 
--- Tombol Teleport Gunung
-local tpGunung = createStyledButton(tpTab, "Teleport", UDim2.new(0, 60, 0, 140), UDim2.new(0, 100, 0, 25))
+-- Tombol Teleport (KOLOM KANAN)
+local tpGunung = createStyledButton(tpTab, "Teleport", UDim2.new(0, 390, 0, 35), UDim2.new(0, 100, 0, 25))
 
--- Tombol Kanan Gunung
-local rightBtn = createStyledButton(tpTab, "→", UDim2.new(0, 165, 0, 140), UDim2.new(0, 35, 0, 25))
+-- Tombol Kanan (KOLOM KANAN)
+local rightBtn = createStyledButton(tpTab, "→", UDim2.new(0, 495, 0, 35), UDim2.new(0, 35, 0, 25))
 
--- === GUNUNG EVENTS ===
+-- Event tombol ←
 leftBtn.MouseButton1Click:Connect(function()
     currentIndex = currentIndex - 1
     if currentIndex < 1 then
@@ -880,6 +880,7 @@ leftBtn.MouseButton1Click:Connect(function()
     gunungLabel.Text = "Gunung: " .. mountains[currentIndex].name
 end)
 
+-- Event tombol →
 rightBtn.MouseButton1Click:Connect(function()
     currentIndex = currentIndex + 1
     if currentIndex > #mountains then
@@ -888,7 +889,8 @@ rightBtn.MouseButton1Click:Connect(function()
     gunungLabel.Text = "Gunung: " .. mountains[currentIndex].name
 end)
 
-tpGunung.MouseButton1Click:Connect(function())
+-- Event tombol Teleport
+tpGunung.MouseButton1Click:Connect(function()
     local player = game.Players.LocalPlayer
     local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
     if root then
@@ -896,14 +898,14 @@ tpGunung.MouseButton1Click:Connect(function())
     end
 end)
 
--- === AUTO MUNCAK SECTION ===
+-- Auto Muncak
 local isMuncakRunning = false
 local muncakThread = nil
 
--- Tombol Muncak
-local muncakBtn = createStyledButton(tpTab, "Auto Muncak", UDim2.new(0, 20, 0, 175), UDim2.new(0, 90, 0, 25))
--- Tombol Stop
-local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 115, 0, 175), UDim2.new(0, 70, 0, 25))
+-- Tombol Muncak (KOLOM KANAN)
+local muncakBtn = createStyledButton(tpTab, "Auto Muncak", UDim2.new(0, 350, 0, 70), UDim2.new(0, 90, 0, 25))
+-- Tombol Stop (KOLOM KANAN) - POSISI DIPERBAIKI
+local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 445, 0, 70), UDim2.new(0, 70, 0, 25))
 
 muncakBtn.MouseButton1Click:Connect(function()
     if isMuncakRunning then return end
@@ -945,11 +947,10 @@ stopBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- === TELEPORT BY NAME SECTION ===
--- TextBox untuk input nama pemain dengan outline
+-- TextBox untuk input nama pemain (KOLOM KANAN DENGAN OUTLINE)
 local tpBox = Instance.new("TextBox", tpTab)
 tpBox.Size = UDim2.new(0, 180, 0, 30)
-tpBox.Position = UDim2.new(0, 20, 0, 210)
+tpBox.Position = UDim2.new(0, 350, 0, 105)  -- Kolom kanan
 tpBox.PlaceholderText = "Name to TP"
 tpBox.Text = ""
 tpBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -957,18 +958,18 @@ tpBox.TextColor3 = Color3.new(1, 1, 1)
 tpBox.Font = Enum.Font.Gotham
 tpBox.TextSize = 12
 tpBox.BorderSizePixel = 2
-tpBox.BorderColor3 = Color3.fromRGB(100, 50, 200) -- Outline ungu
+tpBox.BorderColor3 = Color3.fromRGB(100, 50, 200)  -- Outline ungu
 
 local tpBoxCorner = Instance.new("UICorner")
 tpBoxCorner.CornerRadius = UDim.new(0, 6)
 tpBoxCorner.Parent = tpBox
 
--- Tombol Teleport by Name
-local tpByName = createStyledButton(tpTab, "Teleport by Name", UDim2.new(0, 210, 0, 210), UDim2.new(0, 120, 0, 30))
+-- Tombol Teleport by Name (KOLOM KANAN)
+local tpByName = createStyledButton(tpTab, "Teleport by Name", UDim2.new(0, 350, 0, 140), UDim2.new(0, 180, 0, 30))
 
 tpByName.MouseButton1Click:Connect(function()
     local Players = game:GetService("Players")
-    local player = game.Players.LocalPlayer
+    local player = Players.LocalPlayer
     local target = Players:FindFirstChild(tpBox.Text)
     if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
         if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
@@ -977,14 +978,12 @@ tpByName.MouseButton1Click:Connect(function()
     end
 end)
 
--- === GET KOORDINAT SECTION ===
--- Tombol Get Koordinat (Clipboard)
-local getCoordBtn = createStyledButton(tpTab, "Get Koordinat", UDim2.new(0, 20, 0, 250), UDim2.new(0, 120, 0, 30))
+-- Tombol Get Koordinat (Clipboard) - POSISI BAWAH TENGAH
+local getCoordBtn = createStyledButton(tpTab, "Get Koordinat", UDim2.new(0, 200, 0, 180))
 
--- Fungsi notifikasi yang diperbaiki
+-- Fungsi notifikasi 5 detik (DIPERBAIKI)
 local function showNotification(text)
-    local Players = game:GetService("Players")
-    local player = Players.LocalPlayer
+    local player = game.Players.LocalPlayer
     local screenGui = player:FindFirstChild("PlayerGui")
     if not screenGui then return end
     
@@ -1004,36 +1003,12 @@ local function showNotification(text)
     notif.BorderColor3 = Color3.fromRGB(100, 255, 100)
     notif.Parent = screenGui
 
-    -- Tambahkan corner radius
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 8)
     corner.Parent = notif
 
-    -- Animasi fade in
-    notif.BackgroundTransparency = 1
-    notif.TextTransparency = 1
-    
-    local tweenService = game:GetService("TweenService")
-    local tween = tweenService:Create(
-        notif,
-        TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-        {BackgroundTransparency = 0.2, TextTransparency = 0}
-    )
-    tween:Play()
-
-    -- Hapus setelah 5 detik dengan animasi fade out
-    task.delay(4.7, function()
-        if notif then
-            local fadeOut = tweenService:Create(
-                notif,
-                TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
-                {BackgroundTransparency = 1, TextTransparency = 1}
-            )
-            fadeOut:Play()
-            fadeOut.Completed:Connect(function()
-                if notif then notif:Destroy() end
-            end)
-        end
+    task.delay(5, function()
+        if notif then notif:Destroy() end
     end)
 end
 
