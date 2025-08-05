@@ -903,45 +903,46 @@ tpGunung.MouseButton1Click:Connect(function()
     end
 end)
 
-local isMuncakRunning = false
-local muncakThread = nil
+local isMuncak1Running = false
+local muncak1Thread = nil
+local isMuncak2Running = false
+local muncak2Thread = nil
 
 -- Tombol GUI
-local muncakBtn = createStyledButton(tpTab, "Auto Muncak", UDim2.new(0, 280, 0, 70), UDim2.new(0, 90, 0, 25))
-local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 375, 0, 70), UDim2.new(0, 70, 0, 25))
+local muncak1Btn = createStyledButton(tpTab, "Auto Muncak 1", UDim2.new(0, 280, 0, 70), UDim2.new(0, 110, 0, 25))
+local muncak2Btn = createStyledButton(tpTab, "Auto Muncak 2", UDim2.new(0, 395, 0, 70), UDim2.new(0, 110, 0, 25))
+local stopBtn = createStyledButton(tpTab, "Stop", UDim2.new(0, 510, 0, 70), UDim2.new(0, 70, 0, 25))
 
-muncakBtn.MouseButton1Click:Connect(function()
-	if isMuncakRunning then return end
-	isMuncakRunning = true
+-- Auto Muncak 1 (jalan ke depan)
+muncak1Btn.MouseButton1Click:Connect(function()
+	if isMuncak1Running or isMuncak2Running then return end
+	isMuncak1Running = true
 
-	muncakThread = task.spawn(function()
-		while isMuncakRunning do
+	muncak1Thread = task.spawn(function()
+		while isMuncak1Running do
 			local player = game.Players.LocalPlayer
 			local character = player.Character or player.CharacterAdded:Wait()
 			local root = character:WaitForChild("HumanoidRootPart", 5)
 			local hum = character:WaitForChild("Humanoid", 5)
 
 			if root and hum then
-				-- Teleport ke spot gunung
 				local targetPos = mountains[currentIndex].pos
 				root.CFrame = CFrame.new(targetPos)
 				task.wait(0.5)
 
-				-- Jalan ke depan secara manual selama beberapa detik
-                local walkTime = 1 -- detik
-                local stepTime = 0.1
-                local steps = math.floor(walkTime / stepTime)
-                local moveDistance = 1.5 -- jarak tiap langkah
+				-- Jalan ke depan beberapa detik
+				local walkTime = 1
+				local stepTime = 0.1
+				local steps = math.floor(walkTime / stepTime)
+				local moveDistance = 1.5
 
-                for i = 1, steps do
-                    if root then
-                        local forward = root.CFrame.LookVector
-                        root.CFrame = root.CFrame + forward * moveDistance
-                    end
-                    task.wait(stepTime)
-                end
+				for i = 1, steps do
+					if not isMuncak1Running then break end
+					local forward = root.CFrame.LookVector
+					root.CFrame = root.CFrame + forward * moveDistance
+					task.wait(stepTime)
+				end
 
-				-- Bunuh karakter
 				hum.Health = 0
 				task.wait(5)
 			end
@@ -949,11 +950,53 @@ muncakBtn.MouseButton1Click:Connect(function()
 	end)
 end)
 
+-- Auto Muncak 2 (lompat-lompat)
+muncak2Btn.MouseButton1Click:Connect(function()
+	if isMuncak1Running or isMuncak2Running then return end
+	isMuncak2Running = true
+
+	muncak2Thread = task.spawn(function()
+		while isMuncak2Running do
+			local player = game.Players.LocalPlayer
+			local character = player.Character or player.CharacterAdded:Wait()
+			local root = character:WaitForChild("HumanoidRootPart", 5)
+			local hum = character:WaitForChild("Humanoid", 5)
+
+			if root and hum then
+				local targetPos = mountains[currentIndex].pos
+				root.CFrame = CFrame.new(targetPos)
+				task.wait(0.5)
+
+				-- Lompat-lompat di tempat 2 detik
+				local jumpTime = 2
+				local jumpInterval = 0.4
+				local jumpCount = math.floor(jumpTime / jumpInterval)
+
+				for i = 1, jumpCount do
+					if not isMuncak2Running then break end
+					hum.Jump = true
+					task.wait(jumpInterval)
+				end
+
+				hum.Health = 0
+				task.wait(5)
+			end
+		end
+	end)
+end)
+
+-- Tombol STOP untuk matikan keduanya
 stopBtn.MouseButton1Click:Connect(function()
-	isMuncakRunning = false
-	if muncakThread then
-		task.cancel(muncakThread)
-		muncakThread = nil
+	isMuncak1Running = false
+	isMuncak2Running = false
+
+	if muncak1Thread then
+		task.cancel(muncak1Thread)
+		muncak1Thread = nil
+	end
+	if muncak2Thread then
+		task.cancel(muncak2Thread)
+		muncak2Thread = nil
 	end
 end)
 
