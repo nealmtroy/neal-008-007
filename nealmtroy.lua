@@ -851,6 +851,7 @@ local mountains = {
     { name = "GUNUNG EDEN",       pos = Vector3.new(-806, 1937, -939) },
     { name = "GUNUNG KRAKATAU",   pos = Vector3.new(1276, 844, -140) },
     { name = "GUNUNG HOREG",   pos = Vector3.new(-1556, 1019, 531) },
+    { name = "GUNUNG PERKASA",   pos = Vector3.new(-139, 2120, -840) },
 }
 
 local currentIndex = 1
